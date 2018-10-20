@@ -115,43 +115,43 @@ router.get('/products/detail/:id' , function(req, res){
 
 
 
-var getData = co(function* (){
-        // var product = yield ProductsModel.findOne( { 'id' :  req.params.id }).exec();
-        // var comments = yield CommentsModel.find( { 'product_id' :  req.params.id }).exec();
-    //     return {
-    //         product : yield ProductsModel.findOne( { 'id' :  req.params.id }).exec(); //product,
-    //         comments : yield CommentsModel.find( { 'product_id' :  req.params.id }).exec(); //comments
-    //     };
-    // });
-    // getData.then( function(result){
-    //     res.send(result);
+// var getData = co(function* (){
+//         // var product = yield ProductsModel.findOne( { 'id' :  req.params.id }).exec();
+//         // var comments = yield CommentsModel.find( { 'product_id' :  req.params.id }).exec();
+//     //     return {
+//     //         product : yield ProductsModel.findOne( { 'id' :  req.params.id }).exec(); //product,
+//     //         comments : yield CommentsModel.find( { 'product_id' :  req.params.id }).exec(); //comments
+//     //     };
+//     // });
+//     // getData.then( function(result){
+//     //     res.send(result);
 
-    //////// async로 최적화
+//     //////// async로 최적화
     
-    // var getData = async ()=>{
-    //     return {
-    //         product : await ProductsModel.findOne( { 'id' :  req.params.id }).exec(),
-    //         comments : await CommentsModel.find( { 'product_id' :  req.params.id }).exec()
-    //     };
-    // };
-    // getData().then( function(result){
-    //     res.render('admin/productsDetail', { product: result.product , comments : result.comments });
-    // });
+//     var getData = async ()=>{
+//         return {
+//             product : await ProductsModel.findOne( { 'id' :  req.params.id }).exec(),
+//             comments : await CommentsModel.find( { 'product_id' :  req.params.id }).exec()
+//         };
+//     };
+//     getData().then( function(result){
+//         res.render('admin/productsDetail', { product: result.product , comments : result.comments });
+//     });
 
-    // });
+// });
+    router.get('/products/detail/:id' , async(req, res) => {
+        try{
+            var product = await ProductsModel.findOne( { 'id' :  req.params.id }).exec();
+            var comments = await CommentsModel.find( { 'product_id' :  req.params.id }).exec();
+            
+            res.render('admin/productsDetail', { product: product , comments : comments });
+        }catch(e){
+            res.send(e);
+        }
+    });
 
-    /// 최종 결과물
-
-    try{
-        var product = await ProductsModel.findOne( { 'id' :  req.params.id }).exec();
-        var comments = await CommentsModel.find( { 'product_id' :  req.params.id }).exec();
-        
-        res.render('admin/productsDetail', { product: product , comments : comments });
-    }catch(e){
-        res.render(e);
-    }
 });
-
+   
 
 
 router.get('/products/edit/:id' , csrfProtection, function(req, res){
