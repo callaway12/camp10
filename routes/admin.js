@@ -36,9 +36,7 @@ var upload = multer({storage : storage});
 
 var loginRequired = require('../libs/loginRequired');
 
-
-
-
+var co = require('co');
 
 
 
@@ -103,18 +101,55 @@ router.post('/products/write', loginRequired, upload.single('thumbnail'), csrfPr
 // });
 
 router.get('/products/detail/:id' , function(req, res){
-    //url 에서 변수 값을 받아올떈 req.params.id 로 받아온다
-    ProductsModel.findOne( { 'id' :  req.params.id } , function(err ,product){
-        //제품정보를 받고 그안에서 댓글을 받아온다.
-        CommentsModel.find({ product_id : req.params.id } , function(err, comments){
-            res.render('admin/productsDetail', { product: product , comments : comments });
-            //위에 보내주는 알규먼트의 코멘츠를 저 프로덕트 디테일의 코멘츠라는 키값으로 할당시켜준다는거네
-        });      
-        //        CommentsModel.find({ product_id : req.params.id } , function(err, comments){
+    // //url 에서 변수 값을 받아올떈 req.params.id 로 받아온다
+    // ProductsModel.findOne( { 'id' :  req.params.id } , function(err ,product){
+    //     //제품정보를 받고 그안에서 댓글을 받아온다.
+    //     CommentsModel.find({ product_id : req.params.id } , function(err, comments){
+    //         res.render('admin/productsDetail', { product: product , comments : comments });
+    //         //위에 보내주는 알규먼트의 코멘츠를 저 프로덕트 디테일의 코멘츠라는 키값으로 할당시켜준다는거네
+    //     });      
+    //     //        CommentsModel.find({ product_id : req.params.id } , function(err, comments){
   
-    });
-    //            res.render('admin/productsDetail', { product: product , comments : comments });
+    // });
+    // //            res.render('admin/productsDetail', { product: product , comments : comments });
 
+
+
+var getData = co(function* (){
+        // var product = yield ProductsModel.findOne( { 'id' :  req.params.id }).exec();
+        // var comments = yield CommentsModel.find( { 'product_id' :  req.params.id }).exec();
+    //     return {
+    //         product : yield ProductsModel.findOne( { 'id' :  req.params.id }).exec(); //product,
+    //         comments : yield CommentsModel.find( { 'product_id' :  req.params.id }).exec(); //comments
+    //     };
+    // });
+    // getData.then( function(result){
+    //     res.send(result);
+
+    //////// async로 최적화
+    
+    // var getData = async ()=>{
+    //     return {
+    //         product : await ProductsModel.findOne( { 'id' :  req.params.id }).exec(),
+    //         comments : await CommentsModel.find( { 'product_id' :  req.params.id }).exec()
+    //     };
+    // };
+    // getData().then( function(result){
+    //     res.render('admin/productsDetail', { product: result.product , comments : result.comments });
+    // });
+
+    // });
+
+    /// 최종 결과물
+
+    try{
+        var product = await ProductsModel.findOne( { 'id' :  req.params.id }).exec();
+        var comments = await CommentsModel.find( { 'product_id' :  req.params.id }).exec();
+        
+        res.render('admin/productsDetail', { product: product , comments : comments });
+    }catch(e){
+        res.render(e);
+    }
 });
 
 

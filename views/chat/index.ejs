@@ -66,6 +66,11 @@
     });
 
 
+    socket.on('leave', function(data){
+        updateUserList(data);
+    });
+
+    
     $(document).ready(function() {
         $('#sendForm').submit(function(){
             var $massage = $('#sendForm input[name=message]');

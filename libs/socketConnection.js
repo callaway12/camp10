@@ -15,7 +15,7 @@
     
 //     });
 // }
-
+require('./removeByValue')(); // 바로 함수가 펼
 module.exports = function(io) {
     var userList = []; // 밑에 놔두면 새로운 사람 들어올때마다 리스트 새로 초기화 할테니 노노함. 
     io.on('connection', function(socket){ 
@@ -35,6 +35,12 @@ module.exports = function(io) {
         socket.on('client message', function(data){
             io.emit('server message', { message : data.message , displayname : user.displayname });
         });
+        
+        socket.on('disconnect', function(){            
+            userList.removeByValue(user.displayname);
+            io.emit('leave', userList);
+        });
+
 
     });
 };
