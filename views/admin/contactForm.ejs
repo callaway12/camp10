@@ -1,0 +1,20 @@
+<% include ../header.ejs %>
+    <form action="" method="post"> <!--액션을 비워둔게 액션을 하면 그 현재 url로 날라감-->
+        <table class="table table-bordered">
+            <tr>
+                <th>이름</th>
+                <td><input type="text" name="name" class="form-control" value="<%=contact.name%>"/></td>
+            </tr>
+            <tr>
+                <th>이메일</th>
+                <td><input type="text" name="email" class="form-control" value="<%=contact.price%>"/></td>
+            </tr>
+            <tr>
+                <th>전화번호</th>
+                <td><input type="text" name="PhoneNumber" class="form-control" value="<%=contact.description%>"/></td>
+            </tr>
+        </table>
+        <button class="btn btn-primary">작성하기</button>
+    </form>
+
+<% include ../footer.ejs %>

@@ -1,0 +1,39 @@
+<% include ../header.ejs %>
+    
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <%=contact.name%>
+        </div>
+        <div class="panel-body">
+            <div style="padding-bottom: 10px">
+                <%=contact.getDate.year%> -
+                <%=contact.getDate.month%> -
+                <%=contact.getDate.day%> 
+            </div>
+            <div>
+            <%="이름 : "%>
+            <%=contact.name%>
+            </div>
+            <div>
+            <%="이메일 : "%>
+            <%=contact.email%>
+            </div>
+            <div>
+            <%="전화번호 : "%>
+            <%=contact.PhoneNumber%>
+            </div>
+
+
+        </div>
+    </div>
+
+    <a href="/admin/contacts" class="btn btn-default">목록으로</a>
+    <a href="/admin/contacts/edit/<%=contact.id%>" class="btn btn-primary">수정</a>
+
+
+        
+
+
+<% include ../footer.ejs %>
