@@ -315,6 +315,10 @@ router.post('/products/ajax_comment/delete', function(req, res){
 });
 
 
-
+router.get('/mypage', function(req,res){
+    ContactsModel.findOne({ id : req.session.user_id } , function(err, user_id){
+        res.render('/mypage' );
+    });
+});
 
 module.exports = router;

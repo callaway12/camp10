@@ -45,7 +45,7 @@ var home = require('./routes/home.js');
 
 var chat = require('./routes/chat.js');
 
-
+var mypage = require('./routes/mypage.js')
 
 
 
@@ -165,6 +165,7 @@ app.use('/', home);
 app.use('/chat', chat); //이것들 한번에 다 모아서 보는게 낫지 싶음
 
 
+app.use('/mypage', mypage);
 
 
 
