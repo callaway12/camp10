@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var { autoIncrement } = require('mongoose-plugin-autoinc');
+var { autoIncrement } = require('mongoose-plugin-autoinc'); //얘는 왜 컬리브레이스를 달고 있을까?
 
 var UserSchema = new Schema({
     username : {

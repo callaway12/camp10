@@ -1,0 +1,21 @@
+<% include ./header.ejs %>
+
+
+현재 닉네임 : <%=user.displayname%> 
+</br>
+</br>
+</br>
+<div class="input-group mb-3">
+  
+  <input type="text" class="form-control" placeholder="닉네임 수정" aria-label="Example text with button addon" aria-describedby="button-addon1">
+  <div class="input-group-prepend">
+    <button method ="put" href = "/update_password"  class="btn btn-outline-secondary" type="button" id="button-addon2">수정하기</button>
+  </div>
+</div>
+
+
+<% include ./footer.ejs %>
+<script>
+
+
+</script>

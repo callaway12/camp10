@@ -2,7 +2,7 @@
 var express = require('express');
 
 var admin = require('./routes/admin'); //express 밑에다 적어야함.!!!!
-var accounts = require('./routes/accounts'); /////여기 앞에닥 . 적는 이유가 뭘까????????
+var accounts = require('./routes/accounts'); /////여기 앞에닥 . 적는 이유가 뭘까???????? //현재 폴더에서 라는 뜻임
 
 var passport = require('passport');
 var session = require('express-session');
@@ -47,6 +47,7 @@ var chat = require('./routes/chat.js');
 
 var mypage = require('./routes/mypage.js')
 
+var mypage_edit = require('./routes/mypage_edit.js')
 
 
 // 확장자가 ejs 로 끈나는 뷰 엔진을 추가한다.
@@ -115,7 +116,7 @@ app.use(sessionMiddleWare);
 
 
 
-//passport 적용
+//passport 적용 //이거가 미들웨어로 작용한다는건데....
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -167,7 +168,7 @@ app.use('/chat', chat); //이것들 한번에 다 모아서 보는게 낫지 싶
 
 app.use('/mypage', mypage);
 
-
+app.use('/mypage/edit', mypage_edit);
 
 var server = app.listen(port, function(){
     console.log('Express listening on port', port);

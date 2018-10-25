@@ -128,28 +128,34 @@ router.get('/products/detail/:id' , function(req, res){
 
 //     //////// async로 최적화
     
-//     var getData = async ()=>{
-//         return {
-//             product : await ProductsModel.findOne( { 'id' :  req.params.id }).exec(),
-//             comments : await CommentsModel.find( { 'product_id' :  req.params.id }).exec()
-//         };
-//     };
-//     getData().then( function(result){
-//         res.render('admin/productsDetail', { product: result.product , comments : result.comments });
-//     });
-
-// });
-    router.get('/products/detail/:id' , async(req, res) => {
-        try{
-            var product = await ProductsModel.findOne( { 'id' :  req.params.id }).exec();
-            var comments = await CommentsModel.find( { 'product_id' :  req.params.id }).exec();
-            
-            res.render('admin/productsDetail', { product: product , comments : comments });
-        }catch(e){
-            res.send(e);
-        }
+    var getData = async ()=>{
+        return {
+            product : await ProductsModel.findOne( { 'id' :  req.params.id }).exec(),
+            comments : await CommentsModel.find( { 'product_id' :  req.params.id }).exec()
+        };
+    };
+    getData().then( function(result){
+        res.render('admin/productsDetail', { product: result.product , comments : result.comments });
     });
 
+// });
+    // router.get('/products/detail/:id' , async(req, res) => {
+    //     try{
+    //         var product = await ProductsModel.findOne( { 'id' :  req.params.id }).exec();
+    //         var comments = await CommentsModel.find( { 'product_id' :  req.params.id }).exec();
+            
+    //         res.render('admin/productsDetail', { product: product , comments : comments });
+    //     }catch(e){
+    //         res.send(e);
+    //     }
+    // });
+    // router.get('/products/detail/:id' , async(req, res) => {
+    //         var product = await ProductsModel.findOne( { 'id' :  req.params.id }).exec();
+    //         var comments = await CommentsModel.find( { 'product_id' :  req.params.id }).exec();
+            
+    //         res.render('admin/productsDetail', { product: product , comments : comments });
+        
+    // });
 });
    
 
@@ -316,9 +322,23 @@ router.post('/products/ajax_comment/delete', function(req, res){
 
 
 router.get('/mypage', function(req,res){
-    ContactsModel.findOne({ id : req.session.user_id } , function(err, user){
-        res.render('/mypage', { user : user });
+    // UserModel.findOne({ id : req.session.user_id } , function(err, user){
+    // });
+    res.render('/mypage', { user : req.user });
+
+});
+ 
+router.post('/mypage/edit', function(req, res){
+    //넣을 변수 값을 셋팅한다
+    var query = {
+        displayname : req.body.displayname
+    };
+
+    //update의 첫번째 인자는 조건, 두번째 인자는 바뀔 값들
+    UserModel.update({ displayname : req.params.displayname }, { $set : query }, function(err){
+        res.redirect('/mypage'); //수정후 본래보던 상세페이지로 이동
     });
 });
+
 
 module.exports = router;
