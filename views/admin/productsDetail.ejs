@@ -17,6 +17,11 @@
             <img src="/uploads/<%=product.thumbnail%>" style="max-width: 100%"/>
             </p>
             <% } %>
+
+            <%-product.description%>
+
+
+            
             <!-- 댓글영역  -->
             <div>
             </br>
@@ -41,6 +46,8 @@
                     <input type="hidden" name="product_id" value="<%=product.id%>" />
                     <textarea class="form-control" name="content"></textarea>
                     <button class="btn btn-primary" style="margin-top: 10px">댓글작성</button>
+
+                    
                 </form>
             </div> <!-- 액션을 비워놓는 의미 다시 한번 상기 !  -->
          <!--어팬드로 만약 에이젝스로 댓글 더보기 하면 그 이후것들을 어팬드 시키면 됨-->
@@ -53,7 +60,11 @@
 
     <a href="/admin/products" class="btn btn-default">목록으로</a>
     <a href="/admin/products/edit/<%=product.id%>" class="btn btn-primary">수정</a>
+	<a href="/admin/products/delete/<%=product.id%>" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?')">삭제</a>
 
+    <br>
+    <br>
+    <br>
     <script>
         (function(){
             $(document).ready(function() {

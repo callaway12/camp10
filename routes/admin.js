@@ -5,6 +5,9 @@ var ProductsModel = require('../models/ProductsModel');
 var ContactsModel = require('../models/ContactsModel');
 var CommentsModel = require('../models/CommentsModel');
 
+
+var paginate = require('express-paginate'); // paginate
+
 //이미지 저장되는 위치 설정
 var path = require('path');
 var uploadDir = path.join( __dirname , '../uploads' ); // 루트의 uploads위치에 저장한다.
@@ -48,17 +51,37 @@ router.get('/', function(req, res){ //admin 이후 url
 
 
 ////////////////////products routes
-router.get('/products', function(req, res){ 
-    //근데 이게 왜 페이지 콘솔엔 안찍히고 터미널 콘솔에 찍히는지?????????
-    //미들웨어는 관리자만 한다 하면 리콰어로 설정해주고 미들웨어 지금처럼 껴놓으면 된다.
+// router.get('/products', function(req, res){ 
+//     //근데 이게 왜 페이지 콘솔엔 안찍히고 터미널 콘솔에 찍히는지?????????
+//     //미들웨어는 관리자만 한다 하면 리콰어로 설정해주고 미들웨어 지금처럼 껴놓으면 된다.
 
-    ProductsModel.find({}, function(err, products){ //1번 인자는 에러로 2번째 인자는 받고싶은 변수 이름으로.
-        res.render('admin/products',{products : products} )
+//     ProductsModel.find({}, function(err, products){ //1번 인자는 에러로 2번째 인자는 받고싶은 변수 이름으로.
+//         res.render('admin/products',{products : products} )
+//     });
+
+
+//    //res.send('admin products'); 
+// //    res.render('admin/products', {school :  "nodejs"}); //template 사용
+// }); 이게 원래 그냥 페이지네이션 없이 조져놓은거
+
+
+router.get('/products', paginate.middleware(3, 50), async(req,res) => { 
+    const [ results, itemCount ] = await Promise.all([
+        // ProductsModel.find().limit(req.query.limit).skip(req.skip).exec(),
+        ProductsModel.find().sort('-created_at').limit(req.query.limit).skip(req.skip).exec(), 
+        //이게 생성되면 첫 페이지로 호출되게하는거 sort(-1) 이거의 느낌인데 1대신에 저 만든 시간에 따라서 하는듯함.
+
+        ProductsModel.count()
+    ]);
+    const pageCount = Math.ceil(itemCount / req.query.limit);
+
+    const pages = paginate.getArrayPages(req)( 3 , pageCount, req.query.page);
+
+    res.render('admin/products', {
+        products : results,
+        pages: pages,
+        pageCount : pageCount,
     });
-
-
-   //res.send('admin products'); 
-//    res.render('admin/products', {school :  "nodejs"}); //template 사용
 });
 
 // router.get('/products/write', function(req,res){
@@ -340,5 +363,9 @@ router.post('/mypage/edit', function(req, res){
     });
 });
 
+
+router.post('/products/ajax_summernote', loginRequired, upload.single('thumbnail'), (req,res) => {
+    res.send('/uploads/' + req.file.filename);
+});
 
 module.exports = router;

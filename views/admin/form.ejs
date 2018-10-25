@@ -24,9 +24,16 @@
                 <th>가격</th>
                 <td><input type="text" name="price" class="form-control" value="<%=product.price%>"/></td>
             </tr>
-            <tr>
+  <!--          <tr>
                 <th>설명</th>
                 <td><input type="text" name="description" class="form-control" value="<%=product.description%>"/></td>
+            </tr> -->
+            <tr>
+
+                <th>설명</th>
+                <td>
+                    <textarea name="description" class="form-control" id="summernote"><%-product.description%></textarea> 
+                </td>
             </tr>
             
         </table>
@@ -34,5 +41,61 @@
         <a href="/admin/products" class="btn btn-default">목록으로</a>
 
     </form>
+
+
+
+<!-- 스타일관련 -->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/summernote.css" rel="stylesheet">
+<!-- 자바스크립트관련 -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/summernote.js"></script>
+<!-- 한글관련 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/lang/summernote-ko-KR.min.js"></script>
+
+
+<script>
+$(document).ready(function(){
+
+    // $('#editForm').submit(function(){
+    //     $('input[name=files]').remove();
+    // });// 이게 우리가 인풋태그로 사진넣고 섬머노트로도 또 올리고 하니깐 같은 필드로 files로 single 받기로 했는데 두개가 날라오니깐 에러떴다함...
+
+    $('#editForm').submit(function(){
+        $('input[name=files]').remove();
+    });
+
+
+    $('#summernote').summernote({
+        lang: 'ko-KR',
+		height: 300,
+        callbacks : {
+            onImageUpload: function(filed){
+                sendFile(files[0]);
+            }
+        }
+    });
+
+
+});
+
+
+function sendFile(file, editor, welEditable) {
+    data = new FormData(); //what the fuck is FormData??? what is it doing?
+    data.append("thumbnail", file);
+    $.ajax({
+        data: data,
+        type: "POST",
+        url: '/admin/products/ajax_summernote/', //this url is indicate the path that the jpg return blabla shit... didn't get the details. it goes to backend server
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(url) {
+            $('#summernote').summernote("insertImage", url);
+        }
+    });
+};
+
+
+</script>
+
 
 <% include ../footer.ejs %>

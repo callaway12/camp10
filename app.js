@@ -16,6 +16,7 @@ var cookieParser = require('cookie-parser');
 
 
 
+
 var app = express();
 var path = require('path');
 var mongoose = require('mongoose'); //몽구스 연결
@@ -47,8 +48,11 @@ var chat = require('./routes/chat.js');
 
 var mypage = require('./routes/mypage.js')
 
-var mypage_edit = require('./routes/mypage_edit.js')
+var mypage_edit = require('./routes/mypage_edit.js');
 
+var products = require('./routes/products');
+
+var cart = require('./routes/cart.js');
 
 // 확장자가 ejs 로 끈나는 뷰 엔진을 추가한다.
 app.set('views', path.join(__dirname, 'views'));
@@ -110,9 +114,10 @@ var sessionMiddleWare = session({
 });
 app.use(sessionMiddleWare);
 
+app.use('/uploads', express.static('uploads'));
 
 
-
+app.use('/static', express.static('static'));
 
 
 
@@ -149,12 +154,13 @@ app.use('/accounts', accounts);
 
 app.use('/auth', auth);
 
-
+app.use('/products', products);
 
 
 // app.get('/admin', function(req,res){
 //     res.send('admin page ad32');
 // });  -> admin 들고와서 주석처리
+app.use('/cart', cart);
 
 
 

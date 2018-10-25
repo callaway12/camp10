@@ -13,6 +13,7 @@
   crossorigin="anonymous"></script>
       <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       <!-- bootstrap min js 이거는 제이쿼리 하단에 존재해야함-->
+      <script type="text/javascript" src="/static/common.js"></script>
 
 </head>
 <body>
@@ -39,6 +40,7 @@
                                 <li><a href="/accounts/logout" onclick="return confirm('로그아웃 하시겠습니까?')">LOGOUT</a></li>
                                 <li><a href="/mypage" >MYPAGE</a></li>
                                 <li><a href="/chat">CHAT</a></li>
+                                <li><a href="/cart">CART</a></li>
                             <%}else{%>
                             <li><a href="/chat">CHAT</a></li>
                             <li><a href="/accounts/join">JOIN</a></li> 
