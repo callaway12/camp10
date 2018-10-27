@@ -4,7 +4,7 @@ var router = express.Router();
 var ProductsModel = require('../models/ProductsModel');
 var ContactsModel = require('../models/ContactsModel');
 var CommentsModel = require('../models/CommentsModel');
-
+var CheckoutModel = require('../models/CheckoutModel');
 
 var paginate = require('express-paginate'); // paginate
 
@@ -373,7 +373,21 @@ router.post('/products/ajax_summernote', loginRequired, upload.single('thumbnail
 });
 
 
+router.get('/order', function(req,res){
+    CheckoutModel.find( function(err, orderList){ //첫번째 인자는 err, 두번째는 받을 변수명
+        res.render( 'admin/orderList' , 
+            { orderList : orderList }
+        );
+    });
+});
 
+router.get('/order/edit/:id', function(req,res){
+    CheckoutModel.findOne( { id : req.params.id } , function(err, order){
+        res.render( 'admin/orderForm' , 
+            { order : order }
+        );
+    });
+});
 
 
 

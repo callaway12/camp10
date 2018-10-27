@@ -54,5 +54,16 @@ var CheckoutSchema = new Schema({
     }
 });
 
+CheckoutSchema.virtual('getDate').get(function(){ //왜 이건 가상으로 만들까?
+    var date = new Date(this.created_at);
+    return {
+        year : date.getFullYear(),
+        month : date.getMonth()+1,
+        day : date.getDate()
+    };
+});
+
+
+
 CheckoutSchema.plugin( autoIncrement , { model: "checkout", field : "id", startAt : 1 });
 module.exports = mongoose.model( "checkout", CheckoutSchema);

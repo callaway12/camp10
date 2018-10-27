@@ -1,4 +1,6 @@
 <% include ../header.ejs %>
+<% include ./sidebar.ejs %>
+<div class="col-sm-10">
     <form action="" method="post" enctype="multipart/form-data" id="editForm">
         <input type="hidden" name="_csrf" value="<%=csrfToken%>" />
          <!--액션을 비워둔게 액션을 하면 그 현재 url로 날라감-->
@@ -38,7 +40,7 @@
         <a href="/admin/products" class="btn btn-default">목록으로</a>
 
     </form>
-
+</div>
 
 
 <!-- 스타일관련 -->
