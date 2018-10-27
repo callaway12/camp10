@@ -54,6 +54,8 @@ var products = require('./routes/products');
 
 var cart = require('./routes/cart.js');
 
+var checkout = require('./routes/checkout');
+
 // 확장자가 ejs 로 끈나는 뷰 엔진을 추가한다.
 app.set('views', path.join(__dirname, 'views'));
 console.log(__dirname);
@@ -175,6 +177,11 @@ app.use('/chat', chat); //이것들 한번에 다 모아서 보는게 낫지 싶
 app.use('/mypage', mypage);
 
 app.use('/mypage/edit', mypage_edit);
+
+
+
+app.use('/checkout', checkout);
+
 
 var server = app.listen(port, function(){
     console.log('Express listening on port', port);

@@ -364,8 +364,18 @@ router.post('/mypage/edit', function(req, res){
 });
 
 
-router.post('/products/ajax_summernote', loginRequired, upload.single('thumbnail'), (req,res) => {
-    res.send('/uploads/' + req.file.filename);
+// router.post('/products/ajax_summernote', loginRequired, upload.single('thumbnail'), (req,res) => {
+//     res.send('/uploads/' + req.file.filename);
+// });
+
+router.post('/products/ajax_summernote', loginRequired, upload.single('thumbnail'), function(req,res){
+    res.send( '/uploads/' + req.file.filename);
 });
+
+
+
+
+
+
 
 module.exports = router;
