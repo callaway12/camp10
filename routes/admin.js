@@ -463,4 +463,17 @@ router.get('/statistics', adminRequired, async(req,res) => {
 });
 
 
+router.post('/order/edit/:id', adminRequired, function(req,res){
+    var query = {
+        status : req.body.status,
+        song_jang : req.body.song_jang
+    };
+
+    CheckoutModel.update({ id : req.params.id }, { $set : query }, function(err){
+        res.redirect('/admin/order');
+    });
+});
+
+
+
 module.exports = router;
