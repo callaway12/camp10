@@ -6,16 +6,34 @@
 </br>
 </br>
 <div class="input-group mb-3">
-  
-  <input type="text" class="form-control" placeholder="닉네임 수정" aria-label="Example text with button addon" aria-describedby="button-addon1">
-  <div class="input-group-prepend">
-    <button method ="put" href = "/update_password"  class="btn btn-outline-secondary" type="button" id="button-addon2">수정하기</button>
-  </div>
+  <form action="" method="post"  id="mypageeditForm">
+
+    <input type="text" id="newdisplayname" class="form-control" placeholder="닉네임 수정" aria-label="Example text with button addon" aria-describedby="button-addon1">
+    <div class="input-group-prepend">
+    <button method ="put"  class="btn btn-outline-secondary" type="button" id="button-addon2">수정하기</button>
+    </div>
+  </form>
 </div>
 
 
-<% include ./footer.ejs %>
-<script>
 
+
+
+<% include ./footer.ejs %>
+
+<script>
+$(document).ready(function() {
+
+  $('#mypageeditForm').submit{
+    user.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, user) {
+          if (err) return res.status(500).send("There was a problem updating the user.");
+          res.status(200).send(user);
+      });
+            // var newdisplayname = $('#mypageeidtForm input[id=newdisplyname]');
+            // user.displayname = newdisplayname;
+            // user.save();
+
+  }
+}
 
 </script>

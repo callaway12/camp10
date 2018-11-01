@@ -177,6 +177,7 @@ app.use('/chat', chat); //이것들 한번에 다 모아서 보는게 낫지 싶
 app.use('/mypage', mypage);
 
 app.use('/mypage/edit', mypage_edit);
+// app.put('/mypage/users/:id', routes.users.update);
 
 
 

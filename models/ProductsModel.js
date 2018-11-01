@@ -30,7 +30,10 @@ ProductsSchema.virtual('getDate').get(function(){
         day : date.getDate()
     };
 });
-
+ProductsSchema.virtual('getAmountFormat').get(function(){ //getAmountFormat 이게 그 넘버포맷 라이브러리라함
+    // 1000원을 1,000원으로 바꿔준다.
+    return new Intl.NumberFormat().format(this.paid_amount);
+});
 
 // 1씩 증가하는 primary Key를 만든다  밑에 코드들이
 // model : 생성할 document 이름

@@ -62,7 +62,10 @@ CheckoutSchema.virtual('getDate').get(function(){ //왜 이건 가상으로 만�
         day : date.getDate()
     };
 });
-
+CheckoutSchema.virtual('getAmountFormat').get(function(){ //getAmountFormat 이게 그 넘버포맷 라이브러리라함
+    // 1000원을 1,000원으로 바꿔준다.
+    return new Intl.NumberFormat().format(this.paid_amount);
+});
 
 
 CheckoutSchema.plugin( autoIncrement , { model: "checkout", field : "id", startAt : 1 });
