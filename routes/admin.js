@@ -37,7 +37,8 @@ var upload = multer({storage : storage});
 
 
 
-var loginRequired = require('../libs/loginRequired');
+// var adminRequired = require('../libs/adminRequired');
+var adminRequired = require('../libs/adminRequired');
 
 var co = require('co');
 
@@ -45,7 +46,7 @@ var co = require('co');
 
 
 
-router.get('/', function(req, res){ //admin 이후 url
+router.get('/', adminRequired, function(req, res){ //admin 이후 url
     res.send('adimin url');
 });
 
@@ -65,7 +66,7 @@ router.get('/', function(req, res){ //admin 이후 url
 // }); 이게 원래 그냥 페이지네이션 없이 조져놓은거
 
 
-router.get('/products', paginate.middleware(3, 50), async(req,res) => { 
+router.get('/products', adminRequired, paginate.middleware(3, 50), async(req,res) => { 
     const [ results, itemCount ] = await Promise.all([
         // ProductsModel.find().limit(req.query.limit).skip(req.skip).exec(),
         ProductsModel.find().sort('-created_at').limit(req.query.limit).skip(req.skip).exec(), 
@@ -88,14 +89,14 @@ router.get('/products', paginate.middleware(3, 50), async(req,res) => {
 //     res.render( 'admin/form', {product : ""});
 // });// 폼택을 재활용해서 수정할때 등록할때도 쓸라고 form으로 했음
 
-router.get('/products/write', loginRequired, csrfProtection , function(req,res){ // token generator
+router.get('/products/write', adminRequired, csrfProtection , function(req,res){ // token generator
     //edit에서도 같은 form을 사용하므로 빈 변수( product )를 넣어서 에러를 피해준다
     res.render( 'admin/form' , { product : "", csrfToken : req.csrfToken() }); 
 });
 
+//한번에 다 검색해서 한번에 바꾸는거 커맨드 + d 하고 누르면 다 선택된다음에 치고 그다음에 esc로 빠져나와야함.
 
-
-router.post('/products/write', loginRequired, upload.single('thumbnail'), csrfProtection,function(req,res){
+router.post('/products/write', adminRequired, upload.single('thumbnail'), csrfProtection,function(req,res){
 
     console.log(req.file) // 위에 업로드 싱글 대신에 어레이로 받아올수있음 여기에다가 req.file[1] 이런식으로 하면 됨
 
@@ -123,7 +124,7 @@ router.post('/products/write', loginRequired, upload.single('thumbnail'), csrfPr
 //     });
 // });
 
-router.get('/products/detail/:id' , function(req, res){
+router.get('/products/detail/:id' , adminRequired, function(req, res){
     // //url 에서 변수 값을 받아올떈 req.params.id 로 받아온다
     // ProductsModel.findOne( { 'id' :  req.params.id } , function(err ,product){
     //     //제품정보를 받고 그안에서 댓글을 받아온다.
@@ -183,7 +184,7 @@ router.get('/products/detail/:id' , function(req, res){
    
 
 
-router.get('/products/edit/:id' , csrfProtection, function(req, res){
+router.get('/products/edit/:id' , adminRequired, csrfProtection, function(req, res){
     //기존에 폼에 value안에 값을 셋팅하기 위해 만든다.
     ProductsModel.findOne({ id : req.params.id } , function(err, product){
         res.render('admin/form', { product : product, csrfToken : req.csrfToken() }); 
@@ -215,7 +216,7 @@ router.get('/products/edit/:id' , csrfProtection, function(req, res){
 // });
 
 
-router.post('/products/edit/:id', upload.single('thumbnail'), csrfProtection, function(req, res){
+router.post('/products/edit/:id', adminRequired, upload.single('thumbnail'), csrfProtection, function(req, res){
     
     ProductsModel.findOne( {id : req.params.id} , function(err, product){
         //넣을 변수 값을 셋팅한다
@@ -239,7 +240,7 @@ router.post('/products/edit/:id', upload.single('thumbnail'), csrfProtection, fu
 });
 
 
-router.get('/products/delete/:id', function(req, res){
+router.get('/products/delete/:id', adminRequired, function(req, res){
     ProductsModel.remove({ id : req.params.id }, function(err){
         res.redirect('/admin/products');
     });
@@ -364,11 +365,11 @@ router.post('/mypage/edit', function(req, res){
 });
 
 
-// router.post('/products/ajax_summernote', loginRequired, upload.single('thumbnail'), (req,res) => {
+// router.post('/products/ajax_summernote', adminRequired, upload.single('thumbnail'), (req,res) => {
 //     res.send('/uploads/' + req.file.filename);
 // });
 
-router.post('/products/ajax_summernote', loginRequired, upload.single('thumbnail'), function(req,res){
+router.post('/products/ajax_summernote', adminRequired, upload.single('thumbnail'), function(req,res){
     res.send( '/uploads/' + req.file.filename);
 });
 
@@ -389,7 +390,77 @@ router.get('/order/edit/:id', function(req,res){
     });
 });
 
+// router.get('/statistics', adminRequired, function(req,res){
+//     CheckoutModel.find( function(err, orderList){ 
 
+//         var barData = [];   // 넘겨줄 막대그래프 데이터 초기값 선언
+//         var pieData = [];   // 원차트에 넣어줄 데이터 삽입
+//         orderList.forEach(function(order){
+//             // 08-10 형식으로 날짜를 받아온다
+//             var date = new Date(order.created_at);
+//             var monthDay = (date.getMonth()+1) + '-' + date.getDate(); //이형식은 db에서 확인하고 찾을 수 있는 형식으로 맞춰서
+            
+//             // 날짜에 해당하는 키값으로 조회
+//             if(monthDay in barData){
+//                 barData[monthDay]++; //있으면 더한다
+//             }else{
+//                 barData[monthDay] = 1; //없으면 초기값 1넣어준다.
+//             }
+
+//             // 결재 상태를 검색해서 조회
+//             if(order.status in pieData){
+//                 pieData[order.status]++; //있으면 더한다
+//             }else{
+//                 pieData[order.status] = 1; //없으면 결재상태+1
+//             }
+
+//         });
+
+//         res.render('admin/statistics' , { barData : barData , pieData:pieData });
+//     });
+// });
+router.get('/statistics', adminRequired, async(req,res) => {
+
+    // 년-월-일 을 키값으로 몇명이 결제했는지 확인한다
+    // barData._id.count 결제자수에 접근
+    var barData = [];
+    var cursor = CheckoutModel.aggregate(
+            [ 
+                { $sort : { created_at : -1 } },
+                { 
+                    $group : {  
+                        _id : { 
+                            year: { $year: "$created_at" },
+                            month: { $month: "$created_at" }, 
+                            day: { $dayOfMonth: "$created_at" }
+                        }, 
+                        count: { $sum: 1 } 
+                    } 
+                } 
+            ]
+        ).cursor({ batchSize: 1000 }).exec();
+        
+    await cursor.eachAsync(function(doc) {
+        if(doc !== null){
+            barData.push(doc)
+        }
+    });
+
+    var pieData = [];
+    // 배송중, 배송완료, 결제완료자 수로 묶는다
+    var cursor = CheckoutModel.aggregate([ 
+        { $group : { _id : "$status", count: { $sum: 1 } } } ])
+        .cursor({ batchSize: 1000 }).exec();
+    
+    await cursor.eachAsync(function(doc) {
+        if(doc !== null){
+            pieData.push(doc)
+        }
+    });
+
+    res.render('admin/statistics' , { barData : barData , pieData:pieData });
+    
+});
 
 
 module.exports = router;

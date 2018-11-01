@@ -4,8 +4,8 @@ var CheckoutModel = require('../models/CheckoutModel');
 
 const { Iamporter, IamporterError } = require('iamporter'); //아임포트 API 받아오는거를 누가 젬파일로 만들어놓은걸 이제 해갖고 하는거임
 const iamporter = new Iamporter({
-    apiKey: 'REST API 키',
-    secret: 'REST API secret'
+    apiKey: '9239725331277387',
+    secret: 'BOa993V7ii14yCrUJJHw3AgWD9OMWxkymuIvyDDQVFVuhmp056x9GO5jXT5UrpsNUajtOWkKBffTBEUH'
 });
 
 router.get('/' , function(req, res){
@@ -24,6 +24,34 @@ router.get('/' , function(req, res){
     }
     res.render('checkout/index', { cartList : cartList , totalAmount : totalAmount } );
 });
+
+router.get('/complete', async (req,res)=>{
+    var payData = await iamporter.findByImpUid(req.query.imp_uid);
+    var checkout = new CheckoutModel({
+        imp_uid : payData.data.imp_uid,
+        merchant_uid : payData.data.merchant_uid,
+        paid_amount : payData.data.amount,
+        apply_num : payData.data.apply_num,
+        
+        buyer_email : payData.data.buyer_email,
+        buyer_name : payData.data.buyer_name,
+        buyer_tel : payData.data.buyer_tel,
+        buyer_addr : payData.data.buyer_addr,
+        buyer_postcode : payData.data.buyer_postcode,
+
+        status : "결재완료",
+    });
+    await checkout.save();
+    res.redirect('/checkout/success');
+
+});
+
+
+
+
+
+
+
 
 router.post('/complete', (req,res)=>{
 
@@ -73,5 +101,16 @@ router.post('/mobile_complete', (req,res)=>{
 router.get('/success', function(req,res){
     res.render('checkout/success');
 });
+
+router.get('/nomember', function(req,res){
+    res.render('checkout/nomember');
+});
+
+router.get('/nomember/search', function(req,res){
+    CheckoutModel.find({ buyer_email : req.query.email }, function(err, checkoutList){
+        res.render('checkout/search', { checkoutList : checkoutList } );
+    });
+});
+
 
 module.exports = router;

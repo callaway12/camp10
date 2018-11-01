@@ -132,6 +132,8 @@ app.use(flash());
 app.use(function(req, res, next) {
     // app.locals.myname = "nodejs";
     app.locals.isLogin = req.isAuthenticated(); //locals가 뭘까?
+    
+    app.locals.userData = req.user; //사용 정보를 보내고 싶으면 이와같이 셋팅
 
     //app.locals.urlparameter = req.url; //현재 url 정보를 보내고 싶으면 이와같이 셋팅
     //app.locals.userData = req.user; //사용 정보를 보내고 싶으면 이와같이 셋팅
