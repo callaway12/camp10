@@ -1,7 +1,7 @@
 <% include ./header.ejs %>
 
 
-현재 닉네임 : <%=user.displayname%> 
+현재 닉네임 : <%=user.displayname%>
 </br>
 </br>
 </br>
@@ -27,7 +27,7 @@ $(document).ready(function() {
 
   $('#mypageeditForm').submit(function(){
 
-    
+
     $.ajax({
       url: '/mypage/edit',
       type: 'POST',
